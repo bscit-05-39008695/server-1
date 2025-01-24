@@ -6,7 +6,7 @@ const cors = require('cors');
 //const bcrypt = require('bcryptjs'); // Import bcrypt for hashing passwords
 
 const app = express();
-const port = 5017;
+const port = 5018;
 
 
 // Enable CORS
@@ -17,11 +17,14 @@ app.use(bodyParser.json());
 
 // Set up PostgreSQL connection pool
 const pool = new Pool({
-    user: 'postgres.jrnizucwniiqtllvosid',
+    user: 'postgres.nzqybfjrmlsbrskzbyil',
     host: 'aws-0-ap-south-1.pooler.supabase.com',
     database: 'postgres',
-    password: 'asanteyesu9376',
+    password: 'WMBqWdQO4TYIx8MM',
     port: 5432,
+    ssl: { rejectUnauthorized: false },
+    connectionTimeoutMillis: 5000,  // Timeout for connecting to the database
+    idleTimeoutMillis: 30000,        // Timeout for idle connections
 });
 // Test database connection
 pool.query('SELECT NOW()', (err, res) => {
