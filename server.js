@@ -2,12 +2,9 @@ const express = require('express');
 const { Pool } = require('pg');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-// require('dotenv').config();
-//const bcrypt = require('bcryptjs'); // Import bcrypt for hashing passwords
 
 const app = express();
-const port = 5018;
-
+const port = 5015;
 
 // Enable CORS
 app.use(cors());
@@ -17,15 +14,13 @@ app.use(bodyParser.json());
 
 // Set up PostgreSQL connection pool
 const pool = new Pool({
-    user: 'postgres.nzqybfjrmlsbrskzbyil',
-    host: 'aws-0-ap-south-1.pooler.supabase.com',
-    database: 'postgres',
-    password: 'WMBqWdQO4TYIx8MM',
-    port: 5432,
-    ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 5000,  // Timeout for connecting to the database
-    idleTimeoutMillis: 30000,        // Timeout for idle connections
+    'user': 'postgres.nzqybfjrmlsbrskzbyil',
+    'host': 'aws-0-ap-south-1.pooler.supabase.com',
+    'database': 'postgres',
+    'password': 'WMBqWdQO4TYIx8MM',
+    'port': 5432
 });
+
 // Test database connection
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {
@@ -52,8 +47,7 @@ pool.query('SELECT NOW()', (err, res) => {
 app.get('/', (req, res) => {
     res.send('Server is running!');
 });
-
-// Store credentials endpoint
+// Store credentials endpoint - Store user with null verification_token
 app.post('/store-credentials', async (req, res) => {
     console.log('📝 Received request body:', req.body);
     
@@ -68,22 +62,23 @@ app.post('/store-credentials', async (req, res) => {
     }
 
     try {
-        // Hash the password before storing it
+        // Hash the password before storing it (optional, uncomment if needed)
         // const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Insert the user without the verification token
         const query = 'INSERT INTO users(email, password) VALUES($1, $2) RETURNING *';
         console.log('📝 Executing query with email:', email);
         
         const result = await pool.query(query, [email, password]);
         console.log('✅ User stored successfully:', result.rows[0]);
         
-        // Send back navigation instruction
+        // Send back response
         res.status(200).json({
             success: true,
             message: 'User stored successfully',
             user: result.rows[0],
             shouldNavigate: true,
-            navigateTo: '/verification' // or wherever you want to navigate
+            navigateTo: '/verification' // User will go to the verification step
         });
     } catch (err) {
         console.error('❌ Database error:', err);
