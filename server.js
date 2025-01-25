@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-const port = 5015;
+const port = 5065;
 
 // Enable CORS
 app.use(cors());
@@ -18,7 +18,8 @@ const pool = new Pool({
     'host': 'aws-0-ap-south-1.pooler.supabase.com',
     'database': 'postgres',
     'password': 'WMBqWdQO4TYIx8MM',
-    'port': 5432
+    'port': 5432,
+    'ssl': { rejectUnauthorized: false }
 });
 
 // Test database connection
